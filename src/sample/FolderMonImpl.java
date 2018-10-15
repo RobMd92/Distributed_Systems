@@ -5,14 +5,15 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Observable;
 
 
-public class FolderMonImpl implements FolderMonitor {
-    private String choice;
+public class FolderMonImpl extends Observable implements FolderMonitor {
     private OutputStream outputStream;
     private DataInputStream inputStream;
     private File Shared = new File("C:\\Users\\RobDM\\Downloads\\Distributed_Systems\\Shared");
     private File Local = new File("C:\\Users\\RobDM\\Downloads\\Distributed_Systems\\Local");
+    private String[] oldSongs;
 
     @Override
     public boolean isEOF() {
@@ -33,14 +34,16 @@ public class FolderMonImpl implements FolderMonitor {
     public String[] getNames() {
 
 
-        ArrayList<File> listOfFiles = new ArrayList<File>(Arrays.asList(Objects.requireNonNull(Shared.listFiles())));
+        ArrayList<File> listOfFiles = new ArrayList<>(Arrays.asList(Objects.requireNonNull(Shared.listFiles())));
 
 
         String[] strArray = new String[listOfFiles.size()];
+//        oldSongs = new String[listOfFiles.size()];
 
 
         for (int i = 0; i < listOfFiles.size(); i++) {
             strArray[i] = listOfFiles.get(i).getName();
+
 
         }
         return strArray;
@@ -53,7 +56,7 @@ public class FolderMonImpl implements FolderMonitor {
         File[] matchingFiles = Shared.listFiles((dir, name) -> name.startsWith(name1));
         assert matchingFiles != null;
 
-        choice = matchingFiles[0].toString();
+        String choice = matchingFiles[0].toString();
         System.out.println(choice);
 
 
@@ -94,12 +97,21 @@ public class FolderMonImpl implements FolderMonitor {
         return false;
     }
 
+
     @Override
     public boolean isChange() {
+        String[] newSongs = getNames();
+        if (!Arrays.equals(newSongs, oldSongs)) {
+            setChanged();
+            notifyObservers();
+            oldSongs = newSongs;
+
+            return true;
+        }
         return false;
     }
 
-    void downloadFile(String name1) {
+    private void downloadFile(String name1) {
 
         try {
             outputStream = new DataOutputStream(new FileOutputStream(new File(String.valueOf(Local + "/" + name1))));
@@ -109,8 +121,6 @@ public class FolderMonImpl implements FolderMonitor {
 
             }
             closeFile(null);
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
