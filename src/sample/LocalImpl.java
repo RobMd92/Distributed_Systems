@@ -11,8 +11,8 @@ import java.util.Observable;
 public class LocalImpl extends Observable implements FolderMonitor  {
     private OutputStream outputStream;
     private DataInputStream inputStream;
-    private File Shared = new File("C:\\Users\\RobDM\\Downloads\\Distributed_Systems\\Shared");
-    private File Local = new File("C:\\Users\\RobDM\\Downloads\\Distributed_Systems\\Local");
+    private File Shared = new File("Shared");
+    private File Local = new File("Local");
     private String[] oldSongs;
 
 private static LocalImpl sInstance;

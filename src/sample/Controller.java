@@ -94,13 +94,19 @@ public class Controller implements Initializable, Observer {
     public void Dbtn() {
         dBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event) throws NullPointerException {
                 System.out.println("Current Active threads" + Thread.activeCount());
-                Thread t1 = new Thread(Controller.this::getSelection);
+                try {
+                    Thread t1 = new Thread(Controller.this::getSelection);
+                    t1.setDaemon(true);
+                    t1.start();
+                }
+                catch (NullPointerException e){
+                    e.printStackTrace();
+                }
 
 
-                t1.setDaemon(true);
-                t1.start();
+
 
                 System.out.println("\nCurrent Active threads" + Thread.activeCount());
                 System.out.println(Thread.currentThread());
