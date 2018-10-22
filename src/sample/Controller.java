@@ -6,49 +6,61 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.Observer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class Controller implements Initializable, Observer {
     @FXML
     ListView<String> List1;
-    private ObservableList<String> observableList = FXCollections.observableArrayList();
-    private FolderMonImpl f = new FolderMonImpl();
+    @FXML
+    ListView<String> List2;
+    @FXML
+    Button dBtn;
+
+    @FXML
+    Button uBtn;
+    @FXML
+    Button pBtn;
+
+    private ObservableList<String> SharedList = FXCollections.observableArrayList();
+    private ObservableList<String> LocalList = FXCollections.observableArrayList();
+    private SharedImpl f = new SharedImpl();
+    private LocalImpl L = new LocalImpl();
+    private String choice;
 
     public void getObservableList() {
 
+
         String[] names = f.getNames();
 
-        observableList.clear();
+        SharedList.clear();
 
-        observableList.addAll(Arrays.asList(names));
+        SharedList.addAll(Arrays.asList(names));
 
-        List1.setItems(observableList);
+        List1.setItems(SharedList);
+
+        names = L.getNames();
+        LocalList.clear();
+        LocalList.addAll(Arrays.asList(names));
+        List2.setItems(LocalList);
 
     }
 
     public void getSelection() {
-
-        List1.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                String choiceV = List1.getSelectionModel().getSelectedItems().get(0);
-                f.openFile(choiceV);
-            }
-        });
-
+        choice = List1.getSelectionModel().getSelectedItems().get(0);
+        f.openFile(choice);
     }
 
     @Override
@@ -61,13 +73,45 @@ public class Controller implements Initializable, Observer {
     public void initialize(URL location, ResourceBundle resources) {
         getObservableList();
         f.addObserver(this);
+        L.addObserver(this);
+
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), ev -> {
             // code to run every 5 secondus goes here
             System.out.println("5  seconds");
+
+
+
             f.isChange();
+            L.isChange();
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
+
     }
+
+    public void Dbtn() {
+        dBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Current Active threads"+Thread.activeCount());
+            Thread t1 = new Thread(Controller.this::getSelection);
+
+
+             t1.setDaemon(true);
+             t1.start();
+
+                System.out.println("\nCurrent Active threads"+Thread.activeCount());
+                System.out.println(Thread.currentThread());
+                Thread[] threads= new Thread[50];
+                Thread.enumerate(threads);
+                System.out.println(Arrays.toString(threads));
+
+            }
+        });
+    }
+
+
+
+
 }

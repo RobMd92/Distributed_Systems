@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Observable;
 
 
-public class FolderMonImpl extends Observable implements FolderMonitor {
+public class LocalImpl extends Observable implements FolderMonitor  {
     private OutputStream outputStream;
     private DataInputStream inputStream;
     private File Shared = new File("C:\\Users\\RobDM\\Downloads\\Distributed_Systems\\Shared");
@@ -24,6 +24,7 @@ public class FolderMonImpl extends Observable implements FolderMonitor {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         closeFile(null);
         return true;
 
@@ -34,7 +35,7 @@ public class FolderMonImpl extends Observable implements FolderMonitor {
     public String[] getNames() {
 
 
-        ArrayList<File> listOfFiles = new ArrayList<>(Arrays.asList(Objects.requireNonNull(Shared.listFiles())));
+        ArrayList<File> listOfFiles = new ArrayList<>(Arrays.asList(Objects.requireNonNull(Local.listFiles())));
 
 
         String[] strArray = new String[listOfFiles.size()];
@@ -53,7 +54,7 @@ public class FolderMonImpl extends Observable implements FolderMonitor {
     public boolean openFile(String name1) {
 
 
-        File[] matchingFiles = Shared.listFiles((dir, name) -> name.startsWith(name1));
+        File[] matchingFiles = Local.listFiles((dir, name) -> name.startsWith(name1));
         assert matchingFiles != null;
 
         String choice = matchingFiles[0].toString();
@@ -114,7 +115,7 @@ public class FolderMonImpl extends Observable implements FolderMonitor {
     private void downloadFile(String name1) {
 
         try {
-            outputStream = new DataOutputStream(new FileOutputStream(new File(String.valueOf(Local + "/" + name1))));
+            outputStream = new DataOutputStream(new FileOutputStream(new File(String.valueOf(Shared + "/" + name1))));
             while (!isEOF()) {
 
                 outputStream.write(getB());
