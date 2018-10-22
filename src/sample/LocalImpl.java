@@ -15,6 +15,17 @@ public class LocalImpl extends Observable implements FolderMonitor  {
     private File Local = new File("C:\\Users\\RobDM\\Downloads\\Distributed_Systems\\Local");
     private String[] oldSongs;
 
+private static LocalImpl sInstance;
+
+private LocalImpl(){
+
+}
+public static LocalImpl getInstance(){
+    if (sInstance==null){
+        sInstance=new LocalImpl();
+    }
+    return sInstance;
+}
     @Override
     public boolean isEOF() {
         try {

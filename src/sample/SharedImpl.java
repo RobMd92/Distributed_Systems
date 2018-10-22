@@ -15,6 +15,20 @@ public class SharedImpl extends Observable implements FolderMonitor  {
     private File Local = new File("C:\\Users\\RobDM\\Downloads\\Distributed_Systems\\Local");
     private String[] oldSongs;
 
+
+
+    private static SharedImpl sInstance;
+
+    private SharedImpl(){
+
+    }
+    public static SharedImpl getInstance() {
+        if (sInstance == null) {
+            sInstance = new SharedImpl();
+        }
+        return sInstance;
+    }
+
     @Override
     public boolean isEOF() {
         try {
