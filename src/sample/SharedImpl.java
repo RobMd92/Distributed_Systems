@@ -28,7 +28,6 @@ public class SharedImpl extends Observable implements FolderMonitor  {
         }
         return sInstance;
     }
-
     @Override
     public boolean isEOF() {
         try {
