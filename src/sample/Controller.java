@@ -1,6 +1,5 @@
 package sample;
 
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,16 +19,15 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
-
 public class Controller implements Initializable, Observer {
 
     @FXML
     ListView<String> List1;
     @FXML
     ListView<String> List2;
+
     @FXML
     Button dBtn;
-
     @FXML
     Button uBtn;
     @FXML
@@ -37,13 +35,8 @@ public class Controller implements Initializable, Observer {
 
     private ObservableList<String> SharedList = FXCollections.observableArrayList();
     private ObservableList<String> LocalList = FXCollections.observableArrayList();
-    private SharedImpl f;
-    private LocalImpl L;
-    private String choice;
 
     public void getObservableList() {
-
-
         String[] names = SharedImpl.getInstance().getNames();
 
         SharedList.clear();
@@ -56,13 +49,8 @@ public class Controller implements Initializable, Observer {
         LocalList.clear();
         LocalList.addAll(Arrays.asList(names));
         List2.setItems(LocalList);
-
     }
 
-    public void getSelection() {
-        choice = List1.getSelectionModel().getSelectedItems().get(0);
-        SharedImpl.getInstance().openFile(choice);
-    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -82,36 +70,18 @@ public class Controller implements Initializable, Observer {
 
             SharedImpl.getInstance().isChange();
             LocalImpl.getInstance().isChange();
-
-
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
 
-
-    }
-
-    public void Dbtn() {
         dBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-//                System.out.println("Current Active threads" + Thread.activeCount());
-//                Thread t1 = new Thread(Controller.this::getSelection);
-//
-//
-//                t1.setDaemon(true);
-//                t1.start();
-//
-//                System.out.println("\nCurrent Active threads" + Thread.activeCount());
-//                System.out.println(Thread.currentThread());
-//                Thread[] threads = new Thread[50];
-//                Thread.enumerate(threads);
-//                System.out.println(Arrays.toString(threads));
-
-                new UpDownThread("Local/" + List1.getSelectionModel().getSelectedItems().get(0), "Shared/" + List1.getSelectionModel().getSelectedItems().get(0));
+                new UpDownThread("Shared/" + List1.getSelectionModel().getSelectedItems().get(0), "Local/" + List1.getSelectionModel().getSelectedItems().get(0));
             }
         });
-    }
 
+        // TODO: 23/10/2018 Handle uploads here
+    }
 
 }
