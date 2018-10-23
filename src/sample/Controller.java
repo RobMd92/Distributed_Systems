@@ -12,13 +12,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.sql.SQLOutput;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable, Observer {
@@ -95,19 +95,20 @@ public class Controller implements Initializable, Observer {
         dBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Current Active threads" + Thread.activeCount());
-                Thread t1 = new Thread(Controller.this::getSelection);
+//                System.out.println("Current Active threads" + Thread.activeCount());
+//                Thread t1 = new Thread(Controller.this::getSelection);
+//
+//
+//                t1.setDaemon(true);
+//                t1.start();
+//
+//                System.out.println("\nCurrent Active threads" + Thread.activeCount());
+//                System.out.println(Thread.currentThread());
+//                Thread[] threads = new Thread[50];
+//                Thread.enumerate(threads);
+//                System.out.println(Arrays.toString(threads));
 
-
-                t1.setDaemon(true);
-                t1.start();
-
-                System.out.println("\nCurrent Active threads" + Thread.activeCount());
-                System.out.println(Thread.currentThread());
-                Thread[] threads = new Thread[50];
-                Thread.enumerate(threads);
-                System.out.println(Arrays.toString(threads));
-
+                new UpDownThread("Local/" + List1.getSelectionModel().getSelectedItems().get(0), "Shared/" + List1.getSelectionModel().getSelectedItems().get(0));
             }
         });
     }
